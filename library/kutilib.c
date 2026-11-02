@@ -1,6 +1,15 @@
 #include "../includes/utils.h"
 #include <string.h>
+#include <stdbool.h>
+
+// define o tamanho do array keywords
+#define ARR_KEYWORDS_SIZE sizeof(keywords) / sizeof(keywords[0])
+#define TYPES_ARR_SIZE sizeof(kame_types) / sizeof(kame_types[0])
 const char* token_to_string(TokenType type) {
+
+
+
+    
     switch (type) {
         case PLUS:       return "PLUS";
         case EQUALS:    return "EQUALS";
@@ -10,6 +19,7 @@ const char* token_to_string(TokenType type) {
         case TYPE_RUNE:     return "TYPE_RUNE";
         case TYPE_STRING:   return "TYPE_STRING";
         case TYPE_FLOAT:    return "TYPE_FLOAT";
+        case TYPE_BOOL:     return "TYPE_BOOL";
         //ctypes
         case IDENTIFIER: return "IDENTIFIER";
         case MINUS:      return "MINUS";
@@ -20,7 +30,10 @@ const char* token_to_string(TokenType type) {
         case LPAREN:     return "LPAREN";
         case RPAREN:     return "RPAREN";
         case END_OF_FILE:  return "EOF";
+        case KEYWORD:   return "KEYWORD";
         case UNKNOWN:    return "UNKNOWN";
+        case RBRACE:     return "RBRACE";
+        case LBRACE:     return "LBRACE";
         default:         return "UNKNOWN";
     }
 }
@@ -35,24 +48,40 @@ TokenType char_to_token(char c) {
         case ';': return SEMICOLON;
         case '(': return LPAREN;
         case ')': return RPAREN;
+        case '}': return RBRACE;
+        case '{': return LBRACE;
         default:  return UNKNOWN;
     }
 }
 
-const char *kame_types[] = {
-    "int",
-    "string",
-    "rune",
-    "float",
-    "bool"
-};
-
-char* is_type(const char *buffer)
+char  *is_type(const char *lexame)
 {
-    
-    if(strcmp(buffer, "string") == 0) return "string";
-    if(strcmp(buffer, "int") == 0) return "int";
-    if(strcmp(buffer, "float") == 0) return "float";
-    if(strcmp(buffer, "rune") == 0) return "rune";
-    return NULL;
+    for(int i = 0; i < TYPES_ARR_SIZE; i++){
+        if(strcmp(lexame, kame_types[i]) == 0)
+        {
+            if(strcmp(lexame, "int") == 0) {
+                return "int";
+            } else if(strcmp(lexame, "string") == 0) {
+                return "string";
+            } else if(strcmp(lexame, "rune") == 0) {
+                return "rune";
+            } else if(strcmp(lexame, "float") == 0) {
+                return "float";
+            } else if(strcmp(lexame, "bool") == 0) {
+                return "bool";
+            }
+        }
+    }
+    return NULL; // false
+}
+
+bool is_keyword(const char *buff)
+{
+    for(int i =0; i < ARR_KEYWORDS_SIZE; i++)
+    {
+        if(strcmp(buff, keywords[i]) == 0) {
+            return true;
+        }
+    } 
+    return false;
 }

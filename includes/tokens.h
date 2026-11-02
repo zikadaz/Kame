@@ -11,6 +11,7 @@ typedef enum
         TYPE_RUNE, // para characteres
         IDENTIFIER ,         // x, y, nomeVariavel
         NUMBER,             // 3, 5, 24.2, 5.5
+        TYPE_BOOL, // para booleanos
 
         // Operadores de Atribuição e Comparação
         ASSIGNMENT,         // '=' (para inicializar: int x = 10)
@@ -26,14 +27,15 @@ typedef enum
         LPAREN,             // '('
         RPAREN,             // ')'
         SEMICOLON,          // ';'
-        
+        KEYWORD,
+        RBRACE,
+        LBRACE,
         // Controle do Lexer
         END_OF_FILE,        // Fim do arquivo/texto
         UNKNOWN             // Para caracteres inválidos detectados
     } TokenType;
 
 
-    //
     typedef union {
         int integer;
         float decimal;
@@ -50,4 +52,5 @@ typedef enum
 
     TokenType char_to_token(char c);
     const char *token_to_string(TokenType type);
+    
 #endif

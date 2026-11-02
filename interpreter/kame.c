@@ -2,41 +2,57 @@
 #include <stdlib.h>
 #include "../includes/tokens.h"
 #include "../includes/lexer.h"
+#include "../library/klex.c"
+#include "../library/kutilib.c"
 #include <string.h>
+#define MAX_TOKENS 1024
 #define INPUT_LENGTH 1000
 #define INITIAL_TOKEN_CAPACITY 128
-    #if _WIN32
-        #define PHRASE "Kame | Pre-Alpha Version.: 0.0.0.1-PA on Windows\n"
-    #elif __linux__ || __APPLE__
-        #define PHRASE "Kame | Pre-Alpha Version.: 0.0.0.1-PA on Unix.\n"
-    #else 
-        #define PHRASE "Kame | Pre-Alpha Version.: 0.0.01-PA\n"
-    #endif
+
+
+
+extern const char* token_to_string(TokenType type);
+
+
+#if _WIN32
+    #define PHRASE "Kame | Pre-Alpha Version.: 0.0.0.1-PA on Windows\n"
+#elif __linux__ || __APPLE__
+    #define PHRASE "Kame | Pre-Alpha Version.: 0.0.0.1-PA on Unix.\n"
+#else 
+    #define PHRASE "Kame | Pre-Alpha Version.: 0.0.01-PA\n"
+#endif
 
 void run_repl() {
-    char s[INPUT_LENGTH];
-    Token tokens_da_linha[100]; // Buffer temporário para até 100 tokens por linha
+    char s[MAX_TOKENS];
+    Token tokens_da_linha[MAX_TOKENS]; // Buffer temporário para até MAX_TOKENS tokens por linha
     printf("%s", PHRASE);
-    fflush(stdout);
-    
+
     while(1)
     {
+        char  passed_line[MAX_TOKENS];
+        passed_line[0] = '\0'; // inicializa a string como vazia
         printf("> ");
-        fflush(stdout);
-
+        // define a entrada padrão para o usuario digitar o codigo
         if (fgets(s, INPUT_LENGTH, stdin) == NULL) break;
+        printf("%s", s);
+        s[strcspn(s, "\n")] = '\0';
         
-        int qtd_tokens = lexer(s, tokens_da_linha);
+        if(strcmp(s, "exit") == 0) {
+            printf("Goodbye!\n");
+            break;
+        }
+
+        int qtd_tokens =  lexer(s, tokens_da_linha);
         
         // Debug
         for(int i = 0; i < qtd_tokens; i++) {
 
-            printf("%s : %s     ", token_to_string(tokens_da_linha[i].type),(tokens_da_linha[i].lexeme));
-            fflush(stdout);
+            //printf("%s : %s     ", token_to_string(tokens_da_linha[i].type),(tokens_da_linha[i].lexeme));
+            printf("%s, %s\n", tokens_da_linha[i].lexeme, token_to_string(tokens_da_linha[i].type));
             
         }
         printf("\n");
-        fflush(stdout);
+
     }
 }
 
